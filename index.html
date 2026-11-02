@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1B5FE4"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Vardi: fitness training for government jobs</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#EEF1EC; --surface:#FFFFFF; --ink:#17211C; --muted:#56655C; --line:#D3DAD1;
+  --accent:#1F5E45; --accent-soft:#D9E8DE; --hi:#F2C230;
+  --cta-bg:#17211C; --cta-fg:#F2C230; --warn-bg:#FBF0D6;
+  --disp:"Barlow Condensed","Bahnschrift","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101612; --surface:#18211B; --ink:#E9EFE9; --muted:#9BAAA1; --line:#2B382F;
+    --accent:#6FCF9B; --accent-soft:#1E3326; --cta-bg:#F2C230; --cta-fg:#17211C; --warn-bg:#2E2810;
+  }
+}
+*{box-sizing:border-box;margin:0}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#101612;--surface:#18211B;--ink:#E9EFE9;--muted:#9BAAA1;--line:#2B382F;--accent:#6FCF9B;--accent-soft:#1E3326;--cta-bg:#F2C230;--cta-fg:#17211C;--warn-bg:#2E2810}
+:root[data-theme="light"]{color-scheme:light}
+:root{padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.tools{display:flex;align-items:center;gap:6px}
+.ib{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:none;display:grid;place-items:center}
+.ib svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.steps{display:flex;gap:6px;margin:14px 0 8px}.steps i{flex:1;height:5px;border-radius:3px;background:var(--line)}.steps i.on{background:var(--hi)}
+.row2{display:flex;gap:10px;margin-top:12px}.row2 .btn{flex:1}
+.strip{display:flex;gap:6px;overflow-x:auto;padding:14px 0 2px;scrollbar-width:none}
+.strip button{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:none;font-weight:700;font-variant-numeric:tabular-nums}
+.strip .full{background:var(--accent-soft);border-color:var(--accent)}.strip .cur{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.today{margin-top:18px;padding:14px;border:1.5px solid var(--hi);border-radius:12px}.today b{display:block;font-size:18px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:20}.sheet[hidden]{display:none}
+.sheet .card{width:100%;max-width:480px;background:var(--surface);border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet .clock{text-align:center;margin:20px 0 8px}.chips{display:flex;gap:8px}.chips .btn{flex:1;padding:12px 0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.wrap{max-width:480px;margin:0 auto;min-height:100dvh}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.brand{font-family:var(--disp);font-weight:700;font-size:24px;letter-spacing:.01em}
+.who{font-size:14px;color:var(--muted);text-align:right}
+main{padding:20px 16px 110px}
+h1{font-family:var(--disp);font-size:32px;line-height:1.1;font-weight:700;letter-spacing:-.005em}
+h2{font-family:var(--disp);font-size:22px;line-height:1.15;font-weight:700;margin:30px 0 8px}
+h3{font-size:17px;font-weight:700}
+p+p{margin-top:8px}
+.muted{color:var(--muted)} .small{font-size:14px}
+.clock{font-family:var(--disp);font-variant-numeric:tabular-nums;font-weight:700;font-size:68px;line-height:1;letter-spacing:-.01em}
+.btn{display:block;width:100%;padding:14px 16px;border:0;border-radius:10px;background:var(--cta-bg);color:var(--cta-fg);font-weight:700;font-size:17px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.link{background:none;border:0;padding:0;text-decoration:underline;font-weight:600;color:var(--accent)}
+.group{font-family:var(--disp);font-size:20px;font-weight:700;margin:26px 0 2px}
+.pick{display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%;padding:14px 0;border:0;border-bottom:1px solid var(--line);background:none;text-align:left}
+.pick b{display:block;font-size:17px}
+.pick span{display:block;font-size:14px;color:var(--muted)}
+.pick svg{flex:none;width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2}
+.field{margin:18px 0}
+.lbl{display:block;font-weight:600;margin-bottom:6px}
+.help{font-size:14px;color:var(--muted);margin-top:4px}
+input[type=number]{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;padding:10px 4px;border:0;background:none;font-weight:600;font-size:15px}
+.seg button+button{border-left:1.5px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.note{background:var(--warn-bg);border-left:4px solid var(--hi);padding:12px 14px;border-radius:0 10px 10px 0;font-size:14px;margin:16px 0}
+.err{color:#B3261E;font-weight:600;margin-top:10px}
+@media (prefers-color-scheme: dark){.err{color:#FF8A80}}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pager button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:none;display:grid;place-items:center}
+.pager button:disabled{opacity:.35}
+.pager svg,.chk svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pager .mid{flex:1;text-align:center}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px}
+.tag.hi{background:var(--hi);color:#17211C}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:12px}
+.stats div{min-width:90px}
+.stats b{font-family:var(--disp);font-size:24px;display:block;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted)}
+details.day{border-bottom:1px solid var(--line)}
+details.day>summary{list-style:none;display:flex;gap:12px;align-items:center;padding:14px 0;cursor:pointer}
+details.day>summary::-webkit-details-marker{display:none}
+.dn{width:40px;font-family:var(--disp);font-weight:700;font-size:20px}
+.dt{flex:1}
+.dt b{display:block;line-height:1.25}
+.dt span{font-size:14px;color:var(--muted)}
+.chk{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:none;display:grid;place-items:center;color:transparent}
+.chk.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.day ul{padding:0 0 14px 52px;list-style:none}
+.day li{position:relative;padding:3px 0 3px 14px;font-size:15px}
+.day li::before{content:"";position:absolute;left:0;top:.8em;width:5px;height:5px;border-radius:50%;background:var(--hi)}
+.rest{color:var(--muted)}
+.lane{position:relative;height:12px;border-radius:6px;background:var(--accent-soft);margin:10px 0 4px}
+.lane i{display:block;height:100%;border-radius:6px;background:var(--accent)}
+.lane b{position:absolute;right:0;top:-4px;bottom:-4px;width:4px;border-radius:2px;background:var(--hi)}
+.trow{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.trow b{display:block}
+.trow .r{text-align:right;white-space:nowrap}
+.macros{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.macros b{display:block;font-family:var(--disp);font-size:24px;line-height:1.1}
+.macros span{font-size:13px;color:var(--muted)}
+.meal{padding:14px 0;border-bottom:1px solid var(--line)}
+.meal header{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.meal ul{list-style:none;padding:6px 0 0}
+.meal li{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding:2px 0}
+.meal li span:last-child{white-space:nowrap;color:var(--muted)}
+.tips{padding-left:20px}
+.tips li{margin:6px 0}
+nav.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav.tabs button{flex:1;padding:10px 0 8px;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:600}
+nav.tabs button[aria-current=page]{color:var(--ink);box-shadow:inset 0 3px 0 var(--hi)}
+nav.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:no-preference){.lane i{transition:width .4s ease}}
+:root{--bg:#F3F5F9;--surface:#FFFFFF;--ink:#0F1B33;--muted:#5B6783;--line:#E3E8F1;--accent:#1B5FE4;--accent-soft:#E6EEFE;--hi:#FFC72C;--cta-bg:#1B5FE4;--cta-fg:#FFFFFF;--warn-bg:#FFF6DC;--sh:0 1px 2px rgba(15,27,51,.06),0 6px 18px rgba(15,27,51,.07);--disp:Inter,system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0A1220;--surface:#121C30;--ink:#EAF0FF;--muted:#9AA8C7;--line:#22304D;--accent:#6EA2FF;--accent-soft:#16294D;--cta-bg:#3C7BFF;--warn-bg:#2A2410;--sh:0 1px 2px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--bg:#0A1220;--surface:#121C30;--ink:#EAF0FF;--muted:#9AA8C7;--line:#22304D;--accent:#6EA2FF;--accent-soft:#16294D;--cta-bg:#3C7BFF;--warn-bg:#2A2410;--sh:0 1px 2px rgba(0,0,0,.5)}
+body::before{background:var(--surface)}
+:focus-visible{outline-color:var(--accent)}
+h1,h2,.clock,.brand{font-weight:800;letter-spacing:-.02em}
+h2{font-size:20px;margin:26px 0 8px}
+.top{background:var(--surface);border-bottom:0;box-shadow:var(--sh)}
+.brand{display:flex;align-items:center;gap:10px;font-size:22px}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#0A2A6B,#1B5FE4);color:#fff}
+.logo svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ib{background:var(--bg);border-color:transparent}
+.btn{border-radius:999px;padding:15px 20px;box-shadow:0 4px 14px rgba(27,95,228,.28)}
+.btn.ghost{background:transparent;border:1.5px solid var(--accent);color:var(--accent);box-shadow:none}
+.seg{border:0;border-radius:999px;background:var(--accent-soft);padding:4px;gap:4px}
+.seg button,.seg button+button{border:0;border-radius:999px}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--accent);box-shadow:var(--sh)}
+input[type=number]{background:var(--surface);border-radius:12px;padding:14px}
+input[type=number]:focus{border-color:var(--accent);outline:0;box-shadow:0 0 0 3px var(--accent-soft)}
+.note{border-radius:12px;border-left:0;box-shadow:inset 4px 0 0 var(--hi)}
+.hero{background:linear-gradient(135deg,#0A2A6B 0%,#1B5FE4 100%);color:#fff;border-radius:22px;padding:18px;box-shadow:0 10px 28px rgba(27,95,228,.3)}
+.hero .muted,.hero .stats span{color:rgba(255,255,255,.78)}
+.hero .pager button{border-color:rgba(255,255,255,.4);color:#fff}
+.hero .tag{background:rgba(255,255,255,.18);color:#fff}.hero .tag.hi{background:var(--hi);color:#111}
+.hero .lane{background:rgba(255,255,255,.25)}.hero .lane i{background:#fff}
+.hero .clock{font-size:60px}
+.fchips{display:flex;gap:8px;overflow-x:auto;padding:18px 0 4px;scrollbar-width:none}
+.fchips button{flex:none;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:14px}
+.fchips button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.xc{display:flex;gap:14px;align-items:center;width:100%;padding:14px;margin-top:12px;border:0;border-radius:18px;background:var(--surface);box-shadow:var(--sh);text-align:left}
+.xc b{display:block;font-size:16px;line-height:1.3}.xc svg{flex:none;width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2}
+.tile{flex:none;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px}
+.c0{background:linear-gradient(135deg,#3E7B27,#7CB342)}.c1{background:linear-gradient(135deg,#1565C0,#42A5F5)}.c2{background:linear-gradient(135deg,#0D47A1,#26C6DA)}.c3{background:linear-gradient(135deg,#6A1B9A,#AB47BC)}.c4{background:linear-gradient(135deg,#E65100,#FFA726)}.c5{background:linear-gradient(135deg,#B71C1C,#EF5350)}.c6{background:linear-gradient(135deg,#00695C,#26A69A)}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600;margin:6px 6px 0 0}
+.strip button{background:var(--surface);border-color:transparent;box-shadow:var(--sh)}.strip .full{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)}.strip .cur{background:var(--accent);color:#fff}
+.today{background:var(--surface);border:0;box-shadow:var(--sh),inset 4px 0 0 var(--hi);border-radius:18px}
+details.day{background:var(--surface);border:0;border-radius:16px;box-shadow:var(--sh);margin:10px 0;padding:0 14px}
+details.day>summary{padding:12px 0}
+.dn{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:16px;background:var(--line)}
+.t-run .dn{background:rgba(27,95,228,.14);color:#4C86F2}.t-strength .dn{background:rgba(232,140,12,.16);color:#D9820A}.t-test .dn{background:rgba(14,159,110,.16);color:#0E9F6E}
+.day ul{padding:0 0 14px 4px}
+.chk{border-color:var(--line)}.chk.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.meal,.trow{background:var(--surface);border:0;border-radius:16px;box-shadow:var(--sh);padding:14px;margin-top:10px}
+.macros{border:0;padding:0;gap:8px}.macros>div{background:var(--surface);border-radius:14px;padding:10px;box-shadow:var(--sh)}
+.macros>div:nth-child(1) b{color:#E8590C}.macros>div:nth-child(2) b{color:var(--accent)}.macros>div:nth-child(3) b{color:#C79100}.macros>div:nth-child(4) b{color:#0E9F6E}
+nav.tabs{border-top:0;box-shadow:0 -6px 20px rgba(15,27,51,.1)}
+nav.tabs button[aria-current=page]{box-shadow:none;color:var(--accent)}
+nav.tabs button[aria-current=page] svg{background:var(--accent-soft);width:24px;padding:4px 18px;box-sizing:content-box;border-radius:16px}
+.sheet .card{border-radius:24px 24px 0 0}
+.mapbox{position:relative;margin-top:12px;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--sh)}
+.mapbox svg{display:block;width:100%;height:auto}
+.gps{position:absolute;left:12px;top:12px;padding:4px 10px;border-radius:99px;background:var(--surface);box-shadow:var(--sh);font-size:12px;font-weight:600}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.rstats div{background:var(--surface);border-radius:14px;padding:12px 6px;text-align:center;box-shadow:var(--sh)}
+.rstats b{display:block;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}.rstats span{font-size:12px;color:var(--muted)}
+.run{display:flex;gap:12px;align-items:center;background:var(--surface);border-radius:16px;padding:10px;margin-top:10px;box-shadow:var(--sh)}
+.run b{display:block}.rth{flex:none;width:72px;height:48px;border-radius:10px;overflow:hidden;background:var(--bg)}.rth svg{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand"><span class="logo"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></span>Vardi</div><div class="tools"><span class="who" id="who"></span><button class="ib" id="tm" data-act="tm" aria-label="Open timers" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg></button><button class="ib" id="theme" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16" /></svg></button></div></div>
+  <main id="app"></main>
+  <nav class="tabs" id="tabs" hidden></nav>
+  <div class="sheet" id="sheet" hidden></div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const half = x => Math.round(x * 2) / 2;
+const fmt = s => { s = Math.round(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const ft = v => { const f = Math.floor(v + 1e-6), i = Math.round((v - f) * 12); return i ? `${f} ft ${i} in` : `${f} ft`; };
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+/* ---------- exam data (compiled from public notices, Oct 2026) ---------- */
+const run = (km, qual, top) => ({ id: 'run', t: 'run', km, qual, top, label: (km < 1 ? Math.round(km * 1000) + ' m' : km + ' km') + ' run' });
+const reps = (id, label, qual, top) => ({ id, t: 'reps', label, qual, top });
+const jump = (id, label, qual) => ({ id, t: 'jump', label, qual });
+
+const EXAMS = [
+  { id: 'army', grp: 'Agniveer', name: 'Army Agniveer (General Duty)',
+    ev: { M: [run(1.6, 345, 330), reps('pullup', 'Pull-ups', 6, 10)], F: [run(1.6, 480, 450)] },
+    pmt: { M: 'Height about 170 cm (varies by region). Chest 77 cm with 5 cm expansion.', F: 'Height about 157 cm (varies by region).' },
+    notes: ['Run and pull-ups earn marks. Men finishing 1.6 km by 5:30 get 60 marks; 5:31 to 5:45 gets 48.',
+            'Pull-ups: 10 earns 40 marks, 9 earns 33, 8 earns 27, 7 earns 21, 6 earns 16. Below 6 fails.',
+            'Women run 1.6 km in 7:30 (full marks group) or 8:00.',
+            'Balance and ditch-crossing skills are also tested, so practise them on a field.'] },
+  { id: 'iaf', grp: 'Agniveer', name: 'Air Force Agniveervayu (Group X and Y)',
+    ev: { M: [run(1.6, 420), reps('pushup', 'Push-ups', 10), reps('situp', 'Sit-ups', 10), reps('squat', 'Squats (uthak-baithak)', 20)],
+          F: [run(1.6, 480), reps('situp', 'Sit-ups', 10), reps('squat', 'Squats (uthak-baithak)', 15)] },
+    pmt: { M: 'Height, weight and chest as per the current notification.', F: 'Height and weight as per the current notification.' },
+    notes: ['Push-ups, sit-ups and squats are each timed at 1 minute (women: sit-ups get 1 min 30 s).',
+            'Order: run first, then push-ups after a 10 minute break, then 2 minutes between the next events.',
+            'Passing the PFT leads to Adaptability Tests I and II, then medical.',
+            'Age range is 17.5 to 22 years.'] },
+  { id: 'navy', grp: 'Agniveer', name: 'Navy Agniveer (SSR and MR)',
+    ev: { M: [run(1.6, 390), reps('squat', 'Squats (uthak-baithak)', 20), reps('pushup', 'Push-ups', 12)],
+          F: [run(1.6, 480), reps('squat', 'Squats (uthak-baithak)', 15), reps('situp', 'Bent-knee sit-ups', 10)] },
+    pmt: { M: 'Height and vision standards as per the notification.', F: 'Height and vision standards as per the notification.' },
+    notes: ['The PFT is qualifying. Merit comes from the written exam (INET).',
+            'Check the notification for the time limit on each exercise.'] },
+  { id: 'afcat', grp: 'Officer entry', name: 'AFCAT (Air Force officer)',
+    ev: { M: [run(1.6, 600), reps('pushup', 'Push-ups', 10), reps('chinup', 'Chin-ups', 3)],
+          F: [run(1.6, 600), reps('pushup', 'Push-ups', 10), reps('chinup', 'Chin-ups', 3)] },
+    pmt: { M: 'Height and weight depend on branch (flying or ground duty). Medical is strict.', F: 'Height and weight depend on branch (flying or ground duty). Medical is strict.' },
+    notes: ['These are the commonly published fitness expectations for AFCAT candidates.',
+            'Women: confirm gender-specific limits in the current AFCAT notification.',
+            'The five-day selection board adds group and outdoor tasks, so general stamina helps well beyond these minimums.'] },
+  { id: 'ssc', grp: 'Police and paramilitary', name: 'SSC GD (CAPF, NIA, SSF, Rifleman)',
+    ev: { M: [run(5, 1440)], F: [run(1.6, 510)] },
+    pmt: { M: 'Height 170 cm (General, OBC, SC), 162.5 cm (ST). Chest 80 to 85 cm.', F: 'Height 157 cm (General, OBC, SC), 150 cm (ST).' },
+    notes: ['The race is qualifying. Ranking comes from the written exam.',
+            'Candidates from Ladakh have different run standards.',
+            'A detailed medical exam follows the physical tests.'] },
+  { id: 'delhi', grp: 'Police and paramilitary', name: 'Delhi Police Constable (Executive)',
+    ev: { M: [run(1.6, 360), jump('lj', 'Long jump', 14), jump('hj', 'High jump', 3.75)],
+          F: [run(0.8, 300), jump('lj', 'Long jump', 10), jump('hj', 'High jump', 3)] },
+    pmt: { M: 'Height and chest as per the notification.', F: 'Height 157 cm (General).' },
+    notes: ['Standards shown are for candidates up to 30 years. Older age groups get more time and lower jump limits.',
+            'You run first. Only qualifiers move on to the jumps, with 3 attempts in each.',
+            'All three events are qualifying. The written exam decides merit.',
+            'Some older notices listed women running 1.6 km in 8:00. Confirm in the current notification.'] },
+  { id: 'up', grp: 'Police and paramilitary', name: 'UP Police (Constable and SI)',
+    ev: { M: [run(4.8, 1500)], F: [run(2.4, 840)] },
+    pmt: { M: 'Height 168 cm, chest 79 to 84 cm with 5 cm expansion (General, OBC, SC).', F: 'Height 152 cm (General, OBC, SC).' },
+    notes: ['This plan uses the stricter constable timings: men 4.8 km in 25:00, women 2.4 km in 14:00.',
+            'SI recruitment lists 28:00 and 16:00, and some constable notices do too. Confirm which applies to you.',
+            'The run and height checks are pass or fail. Merit comes from the written exam.'] }
+];
+const exam = id => EXAMS.find(e => e.id === id);
+
+const goalOf = e => {
+  if (e.top != null) return e.top;
+  if (e.t === 'run') return Math.round(e.qual * .95 / 5) * 5;
+  if (e.t === 'jump') return Math.round(e.qual * 1.06 * 4) / 4;
+  return Math.max(e.qual + 2, Math.ceil(e.qual * 1.25));
+};
+const defBase = e => e.t === 'run' ? Math.round(goalOf(e) * 1.3 / 5) * 5 : e.t === 'jump' ? Math.round(e.qual * .85 * 4) / 4 : Math.max(0, Math.round(goalOf(e) * .4));
+const stdText = e => e.t === 'run' ? `Finish within ${fmt(e.qual)}` + (e.top ? `, full marks at ${fmt(e.top)}` : '')
+  : e.t === 'jump' ? `Clear ${ft(e.qual)}` : `${e.qual} reps` + (e.top ? `, full marks at ${e.top}` : '');
+const shortStd = e => e.t === 'run' ? `${e.label.replace(' run', '')} in ${fmt(e.qual)}`
+  : e.t === 'jump' ? `${e.label.toLowerCase()} ${ft(e.qual)}`
+  : `${e.qual} ${e.label.toLowerCase().replace(' (uthak-baithak)', '')}`;
+const unitOf = e => e.t === 'run' ? '' : e.t === 'jump' ? ' ft' : '';
+const showVal = (e, v) => e.t === 'run' ? fmt(v) : e.t === 'jump' ? ft(v) : String(v);
+
+/* ---------- training plan ---------- */
+function weeksNeeded(P, ex) {
+  let n = 4;
+  ex.ev[P.g].forEach(e => {
+    const b = P.base[e.id], g = goalOf(e); if (b == null || isNaN(b)) return;
+    let w = 0;
+    if (e.t === 'run') { if (b > g) w = Math.log(b / g) / Math.log(1.025); }
+    else if (e.t === 'jump') { if (b < g) w = (g - b) / (e.id === 'hj' ? .1 : .25); }
+    else if (b < g) w = (g - b) / ((e.id === 'pullup' || e.id === 'chinup') ? .7 : 2.5);
+    n = Math.max(n, Math.ceil(w) + 1);
+  });
+  return Math.min(n, 26);
+}
+
+function buildPlan(P, ex) {
+  const evs = ex.ev[P.g], W = P.weeks, D = P.days;
+  const goals = {}; evs.forEach(e => goals[e.id] = goalOf(e));
+  const nb = Math.ceil(.35 * (W - 1)), nbu = Math.ceil(.45 * (W - 1));
+  const meta = []; let cum = 0;
+  for (let w = 1; w <= W; w++) {
+    const last = w === W, deload = W >= 8 && w % 4 === 0 && w < W - 1;
+    if (!last && !deload) cum++;
+    meta.push({ w, last, deload, bench: last || w % 4 === 0, phase: last ? 'Test week' : w <= nb ? 'Base' : w <= nb + nbu ? 'Build' : 'Peak', cum });
+  }
+  const n = meta.filter(m => !m.last && !m.deload).length || 1;
+  meta.forEach(m => m.f = m.last ? 1 : Math.min(.97, m.cum / n * .97));
+
+  const valAt = (e, w) => {
+    const f = meta[w - 1].f, b = P.base[e.id], g = goals[e.id];
+    if (e.t === 'run') return b <= g ? b : b - (b - g) * f;
+    if (e.t === 'jump') return b >= g ? b : Math.round((b + (g - b) * f) * 4) / 4;
+    return b >= g ? b : Math.round(b + (g - b) * f);
+  };
+  const has = id => evs.find(e => e.id === id);
+  const rEv = evs.find(e => e.t === 'run'), dist = rEv.km;
+  const walkRun = P.base.run / goals.run > 1.5;
+  const lrPeak = dist <= 1 ? 3 : dist <= 2.5 ? 4 : half(dist * 1.4);
+  const lrStart = Math.max(1.5, half(lrPeak * .45));
+  const pace = m => valAt(rEv, m.w) / dist;
+  const longD = m => { let d = half(lrStart + (lrPeak - lrStart) * m.f); return m.deload ? half(d * .7) : d; };
+
+  const WU = 'Warm-up: 5 min easy jog, leg swings, hip circles, 3 short strides.';
+  const CD = 'Cool-down: 5 min walk, then 5 min stretching (calves, hamstrings, hips, shoulders).';
+
+  function quality(m) {
+    const p = pace(m), dl = m.deload ? .6 : 1, short = dist <= 2.5;
+    if (m.bench) {
+      const it = [WU, `Run the full ${rEv.label} at test effort. Log your time in Progress.`];
+      evs.filter(e => e !== rEv).forEach(e => it.push(e.t === 'jump' ? `${e.label}: 3 attempts, log your best.` : `${e.label}: one all-out set after a 5 min rest (use the official time limit from Standards).`));
+      it.push(CD);
+      return { type: 'test', title: 'Benchmark test', mins: 50, items: it };
+    }
+    if (m.phase === 'Base') {
+      const k = Math.round((6 + m.f * 4) * dl);
+      return { type: 'run', title: 'Fartlek and strides', mins: 35, items: [WU, `Fartlek: ${k} × (1 min fast, 1 min easy jog).`, '4 × 80 m relaxed strides, walking back to recover.', CD] };
+    }
+    if (m.phase === 'Build') {
+      const rd = short ? .4 : 1, k = Math.max(3, Math.round((short ? 4 + m.f * 4 : 3 + m.f * 3) * dl)), rest = short ? 90 : 120;
+      return { type: 'run', title: 'Interval run', mins: 45, items: [WU, `${k} × ${Math.round(rd * 1000)} m at ${fmt(p * rd)} per rep (race pace ${fmt(p)}/km).`, `Rest ${rest} s of walking between reps.`, CD] };
+    }
+    if (short) {
+      const bl = dist <= 1 ? 600 : dist <= 1.6 ? 800 : 1200, k = Math.max(1, Math.round(2 * dl)) + 1;
+      return { type: 'run', title: 'Race-pace blocks', mins: 45, items: [WU, `${k} × ${bl} m at ${fmt(p * bl / 1000)} per rep (race pace ${fmt(p)}/km).`, 'Rest 3 min between reps.', 'Finish with 4 × 200 m fast.', CD] };
+    }
+    const tm = Math.round((20 + 10 * m.f) * dl);
+    return { type: 'run', title: 'Tempo run', mins: tm + 25, items: [WU, `${tm} min steady at ${fmt(p + 15)}/km.`, `Then 2 × 1 km at race pace (${fmt(p)}/km), rest 2 min.`, CD] };
+  }
+  function longRun(m) {
+    if (m.last) return { type: 'run', title: 'Easy shake-out run', mins: 20, items: [`Easy ${half(lrPeak * .4)} km with 3 strides at the end.`, 'Rest fully for the last 2 days before your real test.'] };
+    const d = longD(m), ep = pace(m) * 1.35;
+    const it = walkRun && m.f < .5 ? [`${d} km as run-walk: run 3 min, walk 1 min, repeat.`, 'Keep it easy enough to talk.'] : [`${d} km easy at about ${fmt(ep)}/km.`, 'You should be able to speak in full sentences.'];
+    return { type: 'run', title: 'Long easy run', mins: Math.round(d * ep / 60) + 5, items: it };
+  }
+  function easyRun(m) {
+    const d = Math.max(2, half(longD(m) * .6)), ep = pace(m) * 1.35;
+    return { type: 'run', title: 'Easy run', mins: Math.round(d * ep / 60) + 5, items: [walkRun && m.f < .5 ? `${d} km as run-walk: run 2 min, walk 1 min.` : `${d} km easy at about ${fmt(ep)}/km.`, '4 × 80 m strides at the end.'] };
+  }
+  function upper(m, lite) {
+    const s = x => lite ? 2 : x, it = [WU];
+    const pu = has('pullup') || has('chinup'), ps = has('pushup');
+    if (pu) {
+      const v = valAt(pu, m.w);
+      if (v < 2) it.push(`Dead hang: ${s(4)} × 20 to 30 s.`, `Slow negatives (jump up, lower over 5 s): ${s(4)} × 3.`, `Towel or table rows: ${s(3)} × 10.`);
+      else it.push(`${pu.label}: ${s(5)} sets of ${Math.max(1, Math.ceil(v * .6))}, rest 90 s.`, 'One set to near failure, leaving 1 rep in the tank.', `Slow negatives: ${s(3)} × 3.`);
+    }
+    const pv = ps ? valAt(ps, m.w) : 12;
+    it.push(`Push-ups: ${s(4)} × ${Math.max(5, Math.ceil(pv * .65))}, rest 60 s.`, `Wide and close-grip push-ups: ${s(3)} × 8.`, CD);
+    return { type: 'strength', title: pu ? 'Upper body and pull strength' : 'Upper body strength', mins: 40, items: it };
+  }
+  function lower(m, lite) {
+    const s = x => lite ? 2 : x, it = [WU], sq = has('squat'), su = has('situp'), jp = has('lj') || has('hj');
+    if (sq) { const v = valAt(sq, m.w); it.push(`Squats (uthak-baithak): ${s(4)} × ${Math.ceil(v * .7)}, then one timed set of ${v} in 60 s.`); }
+    else it.push(`Bodyweight squats: ${s(4)} × 20.`);
+    if (su) it.push(`Sit-ups: ${s(4)} × ${Math.ceil(valAt(su, m.w) * .7)}.`);
+    it.push(`Lunges: ${s(3)} × 10 per leg.`, `Plank: ${s(3)} × 45 s.`, `Glute bridge: ${s(3)} × 12.`, `Calf raises: ${s(3)} × 15.`);
+    if (jp) it.push(`Broad jumps: ${s(5)} × 5, full recovery.`, `Step-up jumps: ${s(4)} × 6.`, 'Skipping rope: 3 × 60 s.');
+    it.push(CD);
+    return { type: 'strength', title: jp ? 'Legs, core and jump power' : 'Legs and core', mins: 40, items: it };
+  }
+  function full(m, lite) {
+    const a = upper(m, lite).items.slice(1, -1).slice(0, 3), b = lower(m, lite).items.slice(1, -1).slice(0, 4);
+    return { type: 'strength', title: 'Full-body strength', mins: 45, items: [WU, ...a, ...b, CD] };
+  }
+  function skill(m) {
+    const it = [WU];
+    if (ex.id === 'army') it.push('Balance beam or zig-zag walk: 6 passes.', 'Ditch clearance: run up and jump, 6 attempts.');
+    evs.filter(e => e !== rEv).forEach(e => it.push(e.t === 'jump' ? `${e.label}: 5 attempts, rest fully between.` : `${e.label}: one practice set with clean, full-range reps.`));
+    it.push('Rehearse the test order and rest gaps from the Standards tab.', CD);
+    return { type: 'strength', title: 'Event practice', mins: 35, items: it };
+  }
+
+  const ORDER = {
+    3: { days: [0, 2, 5], b: ['q', 'f', 'l'] },
+    4: { days: [0, 1, 3, 5], b: ['q', 'u', 'w', 'l'] },
+    5: { days: [0, 1, 2, 4, 5], b: ['q', 'u', 'e', 'w', 'l'] },
+    6: { days: [0, 1, 2, 3, 4, 5], b: ['q', 'u', 'e', 'w', 's', 'l'] }
+  }[D];
+  const REST = { type: 'rest', title: 'Rest and mobility', mins: 20, items: ['Rest, or a 20 to 30 min easy walk.', '10 min mobility: hips, hamstrings, shoulders.'] };
+
+  const weeks = meta.map(m => {
+    const lite = m.last, days = [];
+    for (let i = 0; i < 7; i++) {
+      const k = ORDER.days.indexOf(i); let s = null;
+      if (k >= 0) {
+        const c = ORDER.b[k];
+        s = c === 'q' ? quality(m) : c === 'u' ? upper(m, lite) : c === 'f' ? full(m, lite) : c === 'w' ? lower(m, lite) : c === 'e' ? easyRun(m) : c === 'l' ? longRun(m) : (lite ? REST : skill(m));
+      }
+      if (!s) s = i === 6 ? { ...REST, title: 'Full rest day', items: ['No training. Sleep 7 to 9 hours.', 'Prepare food for the week.'] } : REST;
+      days.push({ ...s, id: `w${m.w}-${i}`, day: DAYS[i] });
+    }
+    return { m, days };
+  });
+  return { evs, goals, meta, weeks, valAt, rEv, dist };
+}
+
+/* ---------- diet ---------- */
+const FOOD = {
+  almonds: ['Soaked almonds', 'pcs', 7, .25, 1], banana: ['Banana', 'pc', 105, 1.3, 1], dates: ['Dates', 'pcs', 23, .2, 1],
+  milk: ['Toned milk', 'ml', .6, .032, 25], curd: ['Curd', 'g', .6, .035, 10], chilla: ['Besan chilla', 'pc', 130, 7, 1],
+  roti: ['Whole-wheat roti', 'pc', 100, 3, 1], dal: ['Dal', 'katori', 150, 8, .5], rice: ['Cooked rice', 'katori', 170, 3.5, .5],
+  paneer: ['Paneer', 'g', 2.65, .18, 10], sabzi: ['Mixed vegetable sabzi', 'katori', 90, 2.5, .5], salad: ['Salad', 'bowl', 40, 2, 1],
+  sprouts: ['Sprouts chaat', 'katori', 130, 9, .5], soy: ['Soya chunks (dry weight)', 'g', 3.45, .52, 10], rajma: ['Rajma or chole', 'katori', 190, 10, .5],
+  egg: ['Egg (boiled or omelette)', 'pc', 78, 6.3, 1], bread: ['Brown bread', 'slice', 70, 2.5, 1], chicken: ['Chicken (cooked)', 'g', 1.8, .28, 10],
+  fish: ['Fish (cooked)', 'g', 1.5, .22, 10], chaas: ['Buttermilk (chaas)', 'glass', 40, 2, 1]
+};
+const MEALS = {
+  veg: [['On waking', '6:00', [['almonds', 10], ['milk', 200]]], ['Breakfast', '8:30', [['chilla', 3], ['curd', 150], ['banana', 1]]],
+    ['Lunch', '1:00', [['roti', 3], ['dal', 1], ['paneer', 100], ['rice', 1], ['salad', 1]]], ['Pre-workout', '4:30', [['banana', 1], ['dates', 3]]],
+    ['Post-workout', '7:00', [['sprouts', 1], ['soy', 40]]], ['Dinner', '9:00', [['roti', 3], ['rajma', 1], ['sabzi', 1], ['chaas', 1]]], ['Before bed', '10:30', [['milk', 250]]]],
+  egg: [['On waking', '6:00', [['almonds', 10], ['milk', 200]]], ['Breakfast', '8:30', [['egg', 3], ['bread', 2], ['banana', 1]]],
+    ['Lunch', '1:00', [['roti', 3], ['dal', 1], ['sabzi', 1], ['rice', 1], ['egg', 2], ['salad', 1]]], ['Pre-workout', '4:30', [['banana', 1], ['dates', 3]]],
+    ['Post-workout', '7:00', [['egg', 2], ['sprouts', 1]]], ['Dinner', '9:00', [['roti', 3], ['dal', 1], ['sabzi', 1], ['chaas', 1]]], ['Before bed', '10:30', [['milk', 250]]]],
+  nonveg: [['On waking', '6:00', [['almonds', 10], ['milk', 200]]], ['Breakfast', '8:30', [['egg', 3], ['bread', 2], ['banana', 1]]],
+    ['Lunch', '1:00', [['roti', 3], ['rice', 1], ['chicken', 150], ['dal', .5], ['salad', 1]]], ['Pre-workout', '4:30', [['banana', 1], ['dates', 3]]],
+    ['Post-workout', '7:00', [['egg', 2], ['sprouts', 1]]], ['Dinner', '9:00', [['roti', 3], ['fish', 150], ['sabzi', 1], ['chaas', 1]]], ['Before bed', '10:30', [['milk', 250]]]]
+};
+const kcalOf = list => list.reduce((a, [f, q]) => a + FOOD[f][2] * q, 0);
+
+function dietCalc(P) {
+  const bmi = P.w / ((P.h / 100) ** 2);
+  const bmr = 10 * P.w + 6.25 * P.h - 5 * P.age + (P.g === 'M' ? 5 : -161);
+  const tdee = bmr * ({ 3: 1.45, 4: 1.55, 5: 1.65, 6: 1.72 }[P.days]);
+  let mode = P.goalMode, note = '';
+  if (mode === 'auto') mode = bmi < 18.5 ? 'gain' : bmi >= 25 ? 'lose' : 'hold';
+  if (mode === 'lose' && bmi < 18.5) { mode = 'hold'; note = 'Your BMI is under 18.5, so this plan holds calories at maintenance instead of cutting.'; }
+  const adj = mode === 'gain' ? 350 : mode === 'lose' ? -350 : 0;
+  const kcal = Math.max(Math.round((tdee + adj) / 50) * 50, P.g === 'M' ? 1800 : 1500);
+  const protein = Math.round(P.w * (mode === 'lose' ? 2 : mode === 'gain' ? 1.8 : 1.7));
+  const fat = Math.round(kcal * .25 / 9), carbs = Math.round((kcal - protein * 4 - fat * 9) / 4);
+  const water = (P.w * 35 / 1000 + .5).toFixed(1);
+  const base = MEALS[P.diet], total = base.reduce((a, m) => a + kcalOf(m[2]), 0);
+  const sc = clamp(kcal / total, .6, 1.7);
+  const all = base.map(([n, t, items]) => ({ n, t, rows: items.map(([f, q]) => { const [name, unit, , , step] = FOOD[f]; return { f, name, unit, step, adj: 0, q: Math.max(step, Math.round(q * sc / step) * step) }; }) }));
+  const tot = () => all.reduce((a, m) => a + kcalOf(m.rows.map(r => [r.f, r.q])), 0);
+  const tunable = ['roti', 'rice', 'curd', 'milk', 'paneer', 'chicken', 'fish', 'chilla', 'egg', 'sabzi', 'dal', 'rajma', 'soy'];
+  for (let i = 0; i < 40; i++) {
+    const diff = kcal - tot(); if (Math.abs(diff) <= 50) break;
+    const dir = diff > 0 ? 1 : -1; let best = null;
+    all.forEach(m => m.rows.forEach(r => {
+      if (!tunable.includes(r.f) || Math.abs(r.adj + dir) > 2 || r.q + dir * r.step < r.step) return;
+      const rem = Math.abs(diff - dir * r.step * FOOD[r.f][2]);
+      if (rem < Math.abs(diff) && (!best || rem < best.rem)) best = { r, rem };
+    }));
+    if (!best) break;
+    best.r.q += dir * best.r.step; best.r.adj += dir;
+  }
+  const meals = all.map(({ n, t, rows }) => ({ n, t, rows, kcal: Math.round(kcalOf(rows.map(r => [r.f, r.q]))), pr: Math.round(rows.reduce((a, r) => a + FOOD[r.f][3] * r.q, 0)) }));
+  return { bmi, mode, note, kcal, protein, fat, carbs, water, meals, planKcal: meals.reduce((a, m) => a + m.kcal, 0), planPr: meals.reduce((a, m) => a + m.pr, 0) };
+}
+
+/* ---------- state ---------- */
+let S = { runs: [], step: 0, screen: 'pick', examId: null, P: null, tab: 'plan', wk: 1, start: null, done: {}, logs: [] };
+let PLAN = null, CONFIRM = false;
+const defaultP = () => ({ g: 'M', age: 20, h: 170, w: 62, days: 4, weeks: 12, diet: 'veg', goalMode: 'auto', base: {} });
+function fillBase() { exam(S.examId).ev[S.P.g].forEach(e => { if (S.P.base[e.id] == null) S.P.base[e.id] = defBase(e); }); }
+const ensurePlan = () => { if (!PLAN) PLAN = buildPlan(S.P, exam(S.examId)); return PLAN; };
+function save() { try { localStorage.setItem('vardi:state', JSON.stringify(S)); } catch (e) { /* private mode */ } }
+async function load() { try { const r = localStorage.getItem('vardi:state'); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+const currentWeek = () => clamp(Math.floor((Date.now() - new Date(S.start).getTime()) / (7 * 864e5)) + 1, 1, S.P.weeks);
+
+/* ---------- icons ---------- */
+const IC = {
+  plan: '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+  diet: '<svg viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1.5 1.5-1.5 1.5-3M13 7c0-1.5 1.5-1.5 1.5-3"/></svg>',
+  std: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg>',
+  prog: '<svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg>',
+  chev: '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
+  run: '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>',
+  prev: '<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>',
+  tick: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
+
+/* ---------- views ---------- */
+function viewPickOld() {
+  let h = `<h1>Train for the uniform</h1><p class="muted" style="margin-top:8px">Pick your exam. You get its physical standards, a week-by-week training plan for the time you have, and an Indian diet plan.</p>`;
+  let g = '';
+  EXAMS.forEach(x => {
+    if (x.grp !== g) { g = x.grp; h += `<div class="group">${g}</div>`; }
+    const m = x.ev.M.map(shortStd).join(', '), f = x.ev.F.map(shortStd).join(', ');
+    h += `<button class="pick" data-act="exam" data-id="${x.id}"><div><b>${x.name}</b>` +
+      (m === f ? `<span>Men and women: ${m}</span>` : `<span>Men: ${m}</span><span>Women: ${f}</span>`) + `</div>${IC.chev}</button>`;
+  });
+  h += `<div class="note" style="margin-top:24px">Standards are compiled from public notices and can change each recruitment cycle. Always confirm against the official notification before you rely on a number.</div>`;
+  return h;
+}
+
+const CODE = { army: 'AR', iaf: 'AF', navy: 'NV', afcat: 'AC', ssc: 'SG', delhi: 'DP', up: 'UP' };
+function viewPick() {
+  const fl = S.filter || 'All', cats = ['All', 'Agniveer', 'Officer entry', 'Police and paramilitary'];
+  return `<div class="hero"><h1>Train for the uniform</h1><p class="muted" style="margin-top:8px">Official test standards, a week-by-week plan and an Indian diet, built around your timeline.</p><div class="stats"><div><b>7</b><span>Exams</span></div><div><b>3 steps</b><span>To your plan</span></div><div><b>Free</b><span>No sign-up</span></div></div></div>
+  <div class="fchips" role="group" aria-label="Filter exams">${cats.map(c => `<button data-act="flt" data-v="${c}" aria-pressed="${fl === c}">${c.replace(' and paramilitary', '')}</button>`).join('')}</div>
+  ${EXAMS.map((x, i) => fl === 'All' || x.grp === fl ? `<button class="xc" data-act="exam" data-id="${x.id}"><span class="tile c${i}">${CODE[x.id]}</span><div style="flex:1;min-width:0"><b>${x.name}</b><span class="small muted">${x.grp}</span><div>${x.ev.M.map(e => `<span class="pill">${shortStd(e)}</span>`).join('')}</div></div>${IC.chev}</button>` : '').join('')}
+  <div class="note" style="margin-top:20px">Tags show men's standards. Women's standards are inside each exam. Standards change by recruitment cycle, so confirm against the official notification.</div>`;
+}
+function baseField(e) {
+  const v = S.P.base[e.id];
+  if (e.t === 'run') return `<div class="field"><span class="lbl">Your ${e.label} time today</span><div class="g2"><div><input type="number" inputmode="numeric" min="0" max="90" data-b="run" data-p="m" aria-label="Minutes" value="${Math.floor(v / 60)}"><div class="help">minutes</div></div><div><input type="number" inputmode="numeric" min="0" max="59" data-b="run" data-p="s" aria-label="Seconds" value="${Math.round(v % 60)}"><div class="help">seconds</div></div></div><div class="help">Not sure? Run it once at a hard but steady effort and note the time.</div></div>`;
+  if (e.t === 'jump') return `<div class="field"><label class="lbl" for="b-${e.id}">Your best ${e.label.toLowerCase()} (feet)</label><input id="b-${e.id}" type="number" inputmode="decimal" step="0.25" min="0" max="25" data-b="${e.id}" value="${v}"><div class="help">Use decimals: 3 ft 9 in is 3.75.</div></div>`;
+  return `<div class="field"><label class="lbl" for="b-${e.id}">Most ${e.label.toLowerCase()} in one go</label><input id="b-${e.id}" type="number" inputmode="numeric" min="0" max="100" data-b="${e.id}" value="${v}"></div>`;
+}
+const seg = (act, cur, opts) => `<div class="seg" role="group">${opts.map(([v, l]) => `<button type="button" data-act="${act}" data-v="${v}" aria-pressed="${String(v) === String(cur)}">${l}</button>`).join('')}</div>`;
+
+function viewSetup() {
+  const x = exam(S.examId), P = S.P, st = S.step; fillBase();
+  const sec = (i, c) => `<section ${st === i ? '' : 'hidden'}>${c}</section>`;
+  return `<button class="link small" data-act="back">Change exam</button>
+  <h1 style="margin-top:8px">${x.name}</h1>
+  <div class="steps" role="img" aria-label="Step ${st + 1} of 3">${[0, 1, 2].map(i => `<i class="${i <= st ? 'on' : ''}"></i>`).join('')}</div>
+  <p class="muted small">Step ${st + 1} of 3: ${['About you', 'Where you are today', 'Timeline and food'][st]}</p>
+  ${sec(0, `<div class="field"><span class="lbl">Gender</span>${seg('g', P.g, [['M', 'Male'], ['F', 'Female']])}</div>
+  <div class="g3 field"><div><label class="lbl" for="age">Age</label><input id="age" type="number" inputmode="numeric" data-k="age" value="${P.age}"></div>
+  <div><label class="lbl" for="h">Height (cm)</label><input id="h" type="number" inputmode="numeric" data-k="h" value="${P.h}"></div>
+  <div><label class="lbl" for="w">Weight (kg)</label><input id="w" type="number" inputmode="decimal" data-k="w" value="${P.w}"></div></div>
+  <div class="note">If you have a heart, breathing or joint condition, or feel chest pain or dizziness when you exercise, see a doctor first. This plan is general guidance, not medical advice.</div>`)}
+  ${sec(1, `<p class="muted">The plan builds from your numbers to the test standard.</p>${x.ev[P.g].map(baseField).join('')}`)}
+  ${sec(2, `<div class="field"><label class="lbl" for="weeks">Weeks until your test: <span id="wk-out">${P.weeks}</span></label><input id="weeks" type="range" min="4" max="26" step="1" data-k="weeks" value="${P.weeks}"><div class="help" id="hint"></div></div>
+  <div class="field"><span class="lbl">Training days per week</span>${seg('days', P.days, [[3, '3'], [4, '4'], [5, '5'], [6, '6']])}</div>
+  <div class="field"><span class="lbl">What do you eat?</span>${seg('diet', P.diet, [['veg', 'Vegetarian'], ['egg', 'With eggs'], ['nonveg', 'Non-veg']])}</div>
+  <div class="field"><span class="lbl">Body weight goal</span>${seg('goalMode', P.goalMode, [['auto', 'Auto'], ['lose', 'Lose fat'], ['hold', 'Hold'], ['gain', 'Gain']])}<div class="help">Auto picks from your BMI.</div></div>`)}
+  <div class="err" id="err" role="alert"></div>
+  <div class="row2">${st ? '<button class="btn ghost" data-act="prev">Back</button>' : ''}<button class="btn" data-act="${st === 2 ? 'build' : 'next'}">${st === 2 ? 'Build my plan' : 'Next'}</button></div>`;
+}
+const checkStep = st => { const P = S.P; if (st === 0) return !(P.age >= 16 && P.age <= 40) ? 'Enter an age between 16 and 40.' : !(P.h >= 130 && P.h <= 215) ? 'Enter your height in cm (130 to 215).' : !(P.w >= 35 && P.w <= 150) ? 'Enter your weight in kg (35 to 150).' : ''; return exam(S.examId).ev[P.g].some(e => P.base[e.id] == null || isNaN(P.base[e.id])) ? 'Fill in every field.' : ''; };
+function stripHtml(pl) { return `<div class="strip" role="group" aria-label="Weeks">${pl.weeks.map(({ m, days }) => { const s = days.filter(d => d.type !== 'rest'), n = s.filter(d => S.done[d.id]).length; return `<button data-act="wkset" data-v="${m.w}" class="${m.w === S.wk ? 'cur' : ''}${n === s.length ? ' full' : ''}" aria-label="Week ${m.w}" aria-pressed="${m.w === S.wk}">${m.w}</button>`; }).join('')}</div>`; }
+function todayHtml(wk, cw) {
+  if (S.wk !== cw) return ''; const d = wk.days[(new Date().getDay() + 6) % 7];
+  if (d.type === 'rest') return `<div class="today"><b>Today is a rest day</b><span class="small muted">${d.items[0]}</span></div>`;
+  return `<div class="today"><span class="small muted">Today, ${d.day}</span><b>${d.title}, ${d.mins} min</b><div class="row2"><button class="btn" data-act="tm">Open timers</button><button class="btn ghost" data-act="todone" data-id="${d.id}">${S.done[d.id] ? 'Undo done' : 'Mark done'}</button></div></div>`;
+}
+function chart(pl) {
+  const pts = [S.P.base.run, ...S.logs.map(l => l.v.run).filter(v => v != null)]; if (pts.length < 2) return '';
+  const g = pl.goals.run, all = [...pts, g], lo = Math.min(...all) * .97, hi = Math.max(...all) * 1.03, X = i => 20 + i * 280 / (pts.length - 1), Y = v => 10 + (v - lo) / (hi - lo) * 100;
+  return `<h2>Run time trend</h2><svg viewBox="0 0 320 120" width="100%" role="img" aria-label="Run time across your benchmarks"><line x1="20" x2="300" y1="${Y(g)}" y2="${Y(g)}" stroke="var(--hi)" stroke-width="2" stroke-dasharray="5 4"/><polyline fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" points="${pts.map((v, i) => X(i) + ',' + Y(v)).join(' ')}"/>${pts.map((v, i) => `<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--accent)"/>`).join('')}</svg><div class="small muted">Dashed line is your goal, ${fmt(g)}. A rising line means you are getting faster.</div>`;
+}
+
+function viewPlan() {
+  const pl = ensurePlan(), W = S.P.weeks, wk = pl.weeks[S.wk - 1], m = wk.m, cw = currentWeek();
+  const rv = pl.valAt(pl.rEv, m.w);
+  const others = pl.evs.filter(e => e !== pl.rEv);
+  const sess = wk.days.filter(d => d.type !== 'rest'), dn = sess.filter(d => S.done[d.id]).length;
+  return `<div class="hero"><div class="pager"><button data-act="wk" data-v="-1" aria-label="Previous week" ${S.wk <= 1 ? 'disabled' : ''}>${IC.prev}</button>
+    <div class="mid"><h1>Week ${m.w} of ${W}</h1><span class="tag${m.w === cw ? ' hi' : ''}">${m.phase}${m.w === cw ? ', this week' : ''}</span></div>
+    <button data-act="wk" data-v="1" aria-label="Next week" ${S.wk >= W ? 'disabled' : ''} style="transform:scaleX(-1)">${IC.prev}</button></div>
+  <div style="margin-top:18px"><div class="clock" aria-label="Target ${pl.rEv.label} time">${fmt(rv)}</div>
+  <div class="muted small">${pl.rEv.label} target this week. Plan goal ${fmt(pl.goals.run)}, test standard ${fmt(pl.rEv.qual)}.</div></div>
+  ${others.length ? `<div class="stats">${others.map(e => `<div><b>${showVal(e, pl.valAt(e, m.w))}</b><span>${e.label}, goal ${showVal(e, pl.goals[e.id])}</span></div>`).join('')}</div>` : ''}
+  </div>${stripHtml(pl)}${todayHtml(wk, cw)}
+  ${m.deload ? '<div class="note">Lighter week. Volume drops so your body absorbs the training. Keep the sessions easy.</div>' : ''}
+  ${m.bench ? `<div class="note">${m.last ? 'Test week: one benchmark, light sessions, then rest. Do not try anything new.' : 'Benchmark week: your Monday session is a test. Log the results in Progress.'}</div>` : ''}
+  <h2>Sessions, ${dn} of ${sess.length} done</h2>
+  <div id="days">${wk.days.map(d => `<details class="day t-${d.type}"><summary><span class="dn">${d.day}</span><span class="dt"><b class="${d.type === 'rest' ? 'rest' : ''}">${d.title}</b><span>${d.mins} min</span></span>${d.type !== 'rest' ? `<button class="chk${S.done[d.id] ? ' on' : ''}" data-act="done" data-id="${d.id}" aria-pressed="${!!S.done[d.id]}" aria-label="Mark ${d.day} done">${IC.tick}</button>` : ''}</summary><ul>${d.items.map(i => `<li>${i}</li>`).join('')}</ul></details>`).join('')}</div>`;
+}
+
+function viewDiet() {
+  const d = dietCalc(S.P), mode = { gain: 'Gaining lean weight', lose: 'Losing fat slowly', hold: 'Holding weight' }[d.mode];
+  const rate = d.mode === 'lose' ? 'Aim for about 0.3 to 0.4 kg a week. Do not cut weight in the last 2 weeks before the test.' : d.mode === 'gain' ? 'Aim for about 0.25 kg a week. Faster gain is mostly fat.' : 'Keep your weight steady and let the training change your body.';
+  return `<div class="hero"><h1>Daily fuel</h1><div style="margin-top:14px"><div class="clock">${d.kcal}</div><div class="muted small">calories a day. ${mode}. BMI ${d.bmi.toFixed(1)}.</div></div></div>
+  <div class="macros"><div><b>${d.protein}g</b><span>Protein</span></div><div><b>${d.carbs}g</b><span>Carbs</span></div><div><b>${d.fat}g</b><span>Fat</span></div><div><b>${d.water}L</b><span>Water</span></div></div>
+  ${d.note ? `<div class="note">${d.note}</div>` : ''}
+  <p class="small muted">${rate} Weigh yourself once a week, same time, same scale. If the trend is off for 2 weeks, change calories by about 150.</p>
+  <h2>A sample day</h2>
+  <p class="small muted">Portions are scaled to your target and rounded, so totals are approximate (about ${d.planKcal} kcal and ${d.planPr} g protein). Swap similar foods freely.</p>
+  ${d.meals.map(m => `<div class="meal"><header><h3>${m.n} <span class="muted small" style="font-weight:400">${m.t}</span></h3><span class="small muted">${m.kcal} kcal</span></header><ul>${m.rows.map(r => `<li><span>${r.name}</span><span>${r.q} ${r.unit}</span></li>`).join('')}</ul></div>`).join('')}
+  <h2>Rules that matter</h2>
+  <ul class="tips small">
+    <li>Rest days: drop one roti and the pre-workout snack.</li>
+    <li>Drink water through the day. Pale yellow urine means you are on track.</li>
+    <li>Night before a test: a normal carb-rich dinner like roti, dal and rice. Nothing new or heavy.</li>
+    <li>Test morning: a light meal (banana, milk, a few dates) 2 to 3 hours before you run.</li>
+    <li>This is a whole-food plan. You do not need supplements or protein powder.</li>
+    <li>Weight for height is checked at selection, so build it gradually. Crash diets and dehydration hurt your run.</li>
+  </ul>`;
+}
+
+function viewStd() {
+  const x = exam(S.examId), P = S.P;
+  return `<h1>${x.name}</h1><p class="muted" style="margin-top:6px">Test standards for ${P.g === 'M' ? 'men' : 'women'}. Your plan aims a little past each one so exam-day nerves do not cost you a pass.</p>
+  <h2>Physical fitness test</h2>
+  ${x.ev[P.g].map(e => `<div class="trow"><div><b>${e.label}</b><span class="small muted">${stdText(e)}</span></div><div class="r"><b>${showVal(e, goalOf(e))}</b><span class="small muted">your goal</span></div></div>`).join('')}
+  <h2>Body measurements</h2><p class="small">${x.pmt[P.g]}</p>
+  <h2>Good to know</h2><ul class="tips small">${x.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+  <div class="note">Standards come from public notices gathered in October 2026. Some sources disagree and rules change by cycle, so check the official notification for your recruitment.</div>`;
+}
+
+function latest(id) { for (let i = S.logs.length - 1; i >= 0; i--) if (S.logs[i].v[id] != null) return S.logs[i].v[id]; return null; }
+function viewProg() {
+  const pl = ensurePlan(), x = exam(S.examId);
+  const all = pl.weeks.flatMap(w => w.days).filter(d => d.type !== 'rest'), dn = all.filter(d => S.done[d.id]).length, pct = all.length ? Math.round(dn / all.length * 100) : 0;
+  const rows = pl.evs.map(e => {
+    const b = S.P.base[e.id], g = pl.goals[e.id], c = latest(e.id) ?? b;
+    const p = e.t === 'run' ? (b <= g ? 1 : (b - c) / (b - g)) : (b >= g ? 1 : (c - b) / (g - b)), pp = Math.round(clamp(p, 0, 1) * 100);
+    const ok = e.t === 'run' ? c <= e.qual : c >= e.qual;
+    return `<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:10px"><b>${e.label}</b><span><b>${showVal(e, c)}</b> <span class="muted small">of ${showVal(e, g)}</span></span></div><div class="lane" role="img" aria-label="${pp} percent of the way to goal"><i style="width:${pp}%"></i><b></b></div><div class="small muted">${ok ? 'Meets the test standard.' : 'Below the test standard (' + showVal(e, e.qual) + ').'}</div></div>`;
+  }).join('');
+  const form = pl.evs.map(e => e.t === 'run'
+    ? `<div class="field" style="margin:10px 0"><span class="lbl">${e.label}</span><div class="g2"><input type="number" inputmode="numeric" id="lg-run-m" placeholder="min" value="${S.pend ? Math.floor(S.pend / 60) : ''}" aria-label="Minutes"><input type="number" inputmode="numeric" id="lg-run-s" placeholder="sec" value="${S.pend ? Math.round(S.pend % 60) : ''}" aria-label="Seconds"></div></div>`
+    : `<div class="field" style="margin:10px 0"><label class="lbl" for="lg-${e.id}">${e.label}${e.t === 'jump' ? ' (feet)' : ''}</label><input type="number" inputmode="decimal" step="${e.t === 'jump' ? .25 : 1}" id="lg-${e.id}"></div>`).join('');
+  const hist = S.logs.slice().reverse().map(l => `<div class="trow"><div><b>${l.d}</b></div><div class="r small">${pl.evs.filter(e => l.v[e.id] != null).map(e => `${e.label.replace(' run', '')}: ${showVal(e, l.v[e.id])}`).join('<br>')}</div></div>`).join('');
+  return `<div class="hero"><h1>Progress</h1><div style="margin-top:14px"><div class="clock">${pct}%</div><div class="muted small">${dn} of ${all.length} sessions done</div><div class="lane"><i style="width:${pct}%"></i><b></b></div></div></div>
+  ${chart(pl)}<h2>Readiness for ${x.name.split(' (')[0]}</h2>${rows}
+  <h2>Log a benchmark</h2><p class="small muted">Fill in what you tested. Leave the rest empty.</p>${form}
+  <div class="err" id="err" role="alert"></div><button class="btn" data-act="log">Save results</button>
+  ${hist ? `<h2>History</h2>${hist}` : ''}
+  <h2>Plan settings</h2><button class="btn ghost" data-act="${CONFIRM ? 'reset' : 'ask'}">${CONFIRM ? 'Tap again to erase everything' : 'Start over with a new exam'}</button>`;
+}
+
+function render() {
+  const app = $('#app'), nav = $('#tabs');
+  if (S.screen === 'pick') { app.innerHTML = viewPick(); nav.hidden = true; $('#who').textContent = ''; }
+  else if (S.screen === 'setup') { app.innerHTML = viewSetup(); nav.hidden = true; $('#who').textContent = ''; hint(); }
+  else {
+    app.innerHTML = { plan: viewPlan, run: viewRun, diet: viewDiet, std: viewStd, prog: viewProg }[S.tab](); if (S.tab === 'run') paint();
+    nav.hidden = false; $('#who').textContent = exam(S.examId).name.split(' (')[0];
+    nav.innerHTML = [['plan', 'Plan'], ['run', 'Run'], ['diet', 'Diet'], ['std', 'Standards'], ['prog', 'Progress']].map(([k, l]) => `<button data-act="tab" data-v="${k}" ${S.tab === k ? 'aria-current="page"' : ''}>${IC[k]}${l}</button>`).join('');
+  }
+  $('#tm').hidden = S.screen !== 'app';
+  window.scrollTo(0, 0);
+}
+
+function hint() {
+  const el = $('#hint'); if (!el) return;
+  const need = weeksNeeded(S.P, exam(S.examId));
+  el.innerHTML = S.P.weeks < need
+    ? `Your targets need about ${need} weeks at a safe pace. <button type="button" class="link" data-act="usew" data-v="${need}">Use ${need} weeks</button>`
+    : `${S.P.weeks} weeks is enough for these targets.`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const a = t.dataset.act, v = t.dataset.v;
+  if (a === 'done') {
+    e.preventDefault(); const id = t.dataset.id; S.done[id] = !S.done[id];
+    t.classList.toggle('on', !!S.done[id]); t.setAttribute('aria-pressed', !!S.done[id]);
+    const wk = ensurePlan().weeks[S.wk - 1], ss = wk.days.filter(d => d.type !== 'rest');
+    $('#app h2').textContent = `Sessions, ${ss.filter(d => S.done[d.id]).length} of ${ss.length} done`; save(); return;
+  }
+  if (a === 'exam') { S.examId = t.dataset.id; S.P = defaultP(); S.screen = 'setup'; S.step = 0; render(); return; }
+  if (a === 'next') { const m = checkStep(S.step); if (m) { $('#err').textContent = m; return; } S.step++; render(); return; }
+  if (a === 'prev') { S.step--; render(); return; }
+  if (a === 'wkset') { S.wk = +v; save(); render(); return; }
+  if (a === 'todone') { S.done[t.dataset.id] = !S.done[t.dataset.id]; save(); render(); return; }
+  if (a === 'tm') { tmShow(true); return; }
+  if (a === 'tmx') { tmShow(false); return; }
+  if (a === 'tmmode') { TM.mode = v; tmShow(true); return; }
+  if (a === 'swgo') { if (TM.on) { TM.acc += Date.now() - TM.t0; TM.on = false; } else { TM.t0 = Date.now(); TM.on = true; } tmShow(true); return; }
+  if (a === 'swreset') { TM.acc = 0; TM.on = false; tmShow(true); return; }
+  if (a === 'swuse') { S.pend = Math.round(swNow() / 1000); S.tab = 'prog'; tmShow(false); render(); return; }
+  if (a === 'rest') { TM.end = Date.now() + v * 1000; TM.fin = 0; tmShow(true); return; }
+  if (a === 'rgo') { rGo(); return; }
+  if (a === 'rfin') { rFin(); return; }
+  if (a === 'rdisc') { unwatch(); Object.assign(RUN, { st: 'idle', acc: 0, pts: [], dist: 0, note: 'Run discarded.' }); render(); return; }
+  if (a === 'rman') { rMan(); return; }
+  if (a === 'rdel') { runs().splice(+t.dataset.i, 1); save(); render(); return; }
+  if (a === 'flt') { S.filter = v; render(); return; }
+  if (a === 'back') { S.screen = 'pick'; render(); return; }
+  if (a === 'g') { S.P.g = v; S.P.base = {}; render(); return; }
+  if (a === 'days') { S.P.days = +v; render(); return; }
+  if (a === 'diet' || a === 'goalMode') { S.P[a] = v; render(); return; }
+  if (a === 'usew') { S.P.weeks = +v; $('#weeks').value = v; $('#wk-out').textContent = v; hint(); return; }
+  if (a === 'build') {
+    S.step = 2; const P = S.P, x = exam(S.examId), bad = x.ev[P.g].some(ev => P.base[ev.id] == null || isNaN(P.base[ev.id]));
+    const msg = !(P.age >= 16 && P.age <= 40) ? 'Enter an age between 16 and 40.' : !(P.h >= 130 && P.h <= 215) ? 'Enter your height in cm (130 to 215).' : !(P.w >= 35 && P.w <= 150) ? 'Enter your weight in kg (35 to 150).' : bad ? 'Fill in every "where you are today" field.' : '';
+    if (msg) { $('#err').textContent = msg; return; }
+    PLAN = null; S.screen = 'app'; S.tab = 'plan'; S.start = new Date().toISOString(); S.wk = 1; S.done = {}; S.logs = []; save(); render(); return;
+  }
+  if (a === 'tab') { S.tab = v; CONFIRM = false; save(); render(); return; }
+  if (a === 'wk') { S.wk = clamp(S.wk + +v, 1, S.P.weeks); save(); render(); return; }
+  if (a === 'log') {
+    const pl = ensurePlan(), vals = {};
+    pl.evs.forEach(ev => {
+      if (ev.t === 'run') { const m = $('#lg-run-m').value, s = $('#lg-run-s').value; if (m !== '' || s !== '') vals.run = (+m || 0) * 60 + (+s || 0); }
+      else { const r = $('#lg-' + ev.id).value; if (r !== '' && !isNaN(+r)) vals[ev.id] = +r; }
+    });
+    if (!Object.keys(vals).length) { $('#err').textContent = 'Enter at least one result.'; return; }
+    S.pend = 0; S.logs.push({ d: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }), v: vals }); save(); render(); return;
+  }
+  if (a === 'ask') { CONFIRM = true; render(); return; }
+  if (a === 'reset') { CONFIRM = false; PLAN = null; S = { screen: 'pick', examId: null, P: null, tab: 'plan', wk: 1, start: null, done: {}, logs: [] }; save(); render(); }
+});
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.k) {
+    const v = parseFloat(t.value); S.P[t.dataset.k] = isNaN(v) ? null : v;
+    if (t.dataset.k === 'weeks') $('#wk-out').textContent = t.value;
+    hint();
+  } else if (t.dataset.b) {
+    if (t.dataset.b === 'run') S.P.base.run = (+$('[data-b=run][data-p=m]').value || 0) * 60 + (+$('[data-b=run][data-p=s]').value || 0);
+    else { const v = parseFloat(t.value); S.P.base[t.dataset.b] = isNaN(v) ? null : v; }
+    hint();
+  }
+});
+
+/* ---------- GPS run tracker ---------- */
+const RUN = { st: 'idle', acc: 0, t0: 0, pts: [], dist: 0, wid: null, accy: null, msg: '', note: '', wl: null };
+const runs = () => S.runs || (S.runs = []);
+const rEl = () => RUN.acc + (RUN.st === 'run' ? Date.now() - RUN.t0 : 0);
+const dayKey = d => { const x = new Date(d); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); };
+const hms = s => { s = Math.floor(s); const h = Math.floor(s / 3600); return (h ? h + ':' : '') + String(Math.floor(s % 3600 / 60)).padStart(h ? 2 : 1, '0') + ':' + String(s % 60).padStart(2, '0'); };
+const pc = (km, s) => km > .01 ? fmt(s / km) : '--:--';
+const hav = (a, b) => { const R = 6371000, r = Math.PI / 180, q = Math.sin((b.la - a.la) * r / 2) ** 2 + Math.cos(a.la * r) * Math.cos(b.la * r) * Math.sin((b.lo - a.lo) * r / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(q)); };
+const ds = p => { const k = Math.ceil(p.length / 300); return p.filter((_, i) => i % k === 0 || i === p.length - 1).map(q => ({ la: +q.la.toFixed(6), lo: +q.lo.toFixed(6), t: q.t })); };
+function mapSvg(pts, thumb) {
+  const W = 320, H = 200, g = `<defs><pattern id="gr" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--line)"/></pattern></defs><rect width="${W}" height="${H}" fill="url(#gr)"/>`;
+  if (pts.length < 2) return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Route map">${g}${thumb ? '' : `<text x="160" y="104" text-anchor="middle" fill="var(--muted)" font-size="13">Your route appears here</text>`}</svg>`;
+  const k = Math.cos(pts[0].la * Math.PI / 180), xy = pts.map(p => [p.lo * k, -p.la]), xs = xy.map(a => a[0]), ys = xy.map(a => a[1]);
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), dx = Math.max(Math.max(...xs) - x0, 1e-5), dy = Math.max(Math.max(...ys) - y0, 1e-5), s = Math.min((W - 60) / dx, (H - 60) / dy), ox = (W - dx * s) / 2, oy = (H - dy * s) / 2;
+  const P = xy.map(a => [(a[0] - x0) * s + ox, (a[1] - y0) * s + oy]), e = P[P.length - 1];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Route map">${g}<polyline fill="none" stroke="var(--accent)" stroke-width="${thumb ? 6 : 4}" stroke-linecap="round" stroke-linejoin="round" points="${P.map(a => a[0].toFixed(1) + ',' + a[1].toFixed(1)).join(' ')}"/><circle cx="${P[0][0]}" cy="${P[0][1]}" r="${thumb ? 8 : 6}" fill="#0E9F6E"/><circle cx="${e[0]}" cy="${e[1]}" r="${thumb ? 8 : 6}" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/></svg>`;
+}
+function paint() {
+  const e = $('#rt'); if (!e) return; const s = rEl() / 1000;
+  e.textContent = hms(s); $('#rd').textContent = RUN.dist.toFixed(2); $('#rp').textContent = pc(RUN.dist, s);
+  $('#rg').textContent = RUN.msg || (RUN.st === 'idle' ? 'GPS off' : RUN.accy == null ? 'Searching for GPS' : 'GPS signal, ±' + RUN.accy + ' m');
+  $('#rmap').innerHTML = mapSvg(RUN.pts);
+}
+setInterval(paint, 500);
+function onFix(p) {
+  const c = p.coords; RUN.accy = Math.round(c.accuracy); RUN.msg = '';
+  if (RUN.st !== 'run' || c.accuracy > 35) return paint();
+  const n = { la: c.latitude, lo: c.longitude, t: p.timestamp }, l = RUN.pts[RUN.pts.length - 1];
+  if (l) { const m = hav(l, n), dt = (n.t - l.t) / 1000; if (m < 3 || dt <= 0 || m / dt > 12) return paint(); RUN.dist += m / 1000; }
+  RUN.pts.push(n); paint();
+}
+function watch() {
+  if (!navigator.geolocation) { RUN.msg = 'No GPS on this device. Use manual submission.'; return; }
+  RUN.wid = navigator.geolocation.watchPosition(onFix, er => { RUN.msg = er.code === 1 ? 'Location is blocked. Allow it for this page, or submit manually.' : 'Waiting for GPS. Move to open sky.'; paint(); }, { enableHighAccuracy: true, maximumAge: 1000, timeout: 20000 });
+  try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => { RUN.wl = w; }).catch(() => {}); } catch (e) { /* optional */ }
+}
+function unwatch() { try { if (RUN.wid != null) navigator.geolocation.clearWatch(RUN.wid); if (RUN.wl) RUN.wl.release(); } catch (e) { /* ignore */ } RUN.wid = null; RUN.wl = null; }
+function rGo() {
+  if (RUN.st === 'idle') { Object.assign(RUN, { acc: 0, pts: [], dist: 0, accy: null, msg: '', note: '', t0: Date.now(), st: 'run' }); watch(); }
+  else if (RUN.st === 'run') { RUN.acc += Date.now() - RUN.t0; RUN.st = 'pause'; }
+  else { RUN.t0 = Date.now(); RUN.st = 'run'; }
+  render();
+}
+function submitRun(r) {
+  const now = new Date(); runs().unshift({ ...r, at: now.toISOString(), day: dayKey(now) });
+  const d = ensurePlan().weeks[currentWeek() - 1].days[(now.getDay() + 6) % 7]; if (d.type === 'run' || d.type === 'test') S.done[d.id] = true;
+  RUN.note = 'Run submitted. Nice work.'; save();
+}
+function rFin() {
+  if (RUN.st === 'run') RUN.acc += Date.now() - RUN.t0;
+  const s = Math.round(RUN.acc / 1000), km = +RUN.dist.toFixed(2), route = ds(RUN.pts); unwatch();
+  Object.assign(RUN, { st: 'idle', acc: 0, pts: [], dist: 0, note: '' });
+  if (km < .05 || s < 20) RUN.note = 'That run was too short to submit (under 50 m), so nothing was saved.'; else submitRun({ km, s, src: 'gps', route });
+  render();
+}
+function rMan() {
+  const km = parseFloat($('#mr-km').value), s = (+$('#mr-m').value || 0) * 60 + (+$('#mr-s').value || 0);
+  if (!(km >= .1 && km <= 60) || s < 30) { $('#merr').textContent = 'Enter a distance (0.1 to 60 km) and your time.'; return; }
+  submitRun({ km: +km.toFixed(2), s, src: 'manual' }); render();
+}
+function streak() { const ds2 = new Set(runs().map(r => r.day)); let n = 0, d = new Date(); if (!ds2.has(dayKey(d))) d.setDate(d.getDate() - 1); while (ds2.has(dayKey(d))) { n++; d.setDate(d.getDate() - 1); } return n; }
+function viewRun() {
+  const now = new Date(), td = ensurePlan().weeks[currentWeek() - 1].days[(now.getDay() + 6) % 7], today = runs().some(r => r.day === dayKey(now));
+  const km = runs().filter(r => Date.now() - new Date(r.at) < 7 * 864e5).reduce((a, r) => a + r.km, 0), lbl = { idle: 'Start run', run: 'Pause', pause: 'Resume' }[RUN.st];
+  return `<div class="hero"><h1>Daily run</h1><div class="stats"><div><b>${today ? 'Done' : 'Not yet'}</b><span>Today's submission</span></div><div><b>${streak()}</b><span>Day streak</span></div><div><b>${km.toFixed(1)}</b><span>km, last 7 days</span></div></div></div>
+  <p class="small muted" style="margin-top:12px">${td.type === 'rest' ? 'Today is a rest day in your plan. An easy run is optional.' : `Today's plan: ${td.title}, ${td.mins} min.`}</p>
+  <div class="mapbox"><div id="rmap"></div><div class="gps" id="rg"></div></div>
+  <div class="rstats"><div><b id="rt">0:00</b><span>Time</span></div><div><b id="rd">0.00</b><span>km</span></div><div><b id="rp">--:--</b><span>min per km</span></div></div>
+  ${RUN.note ? `<div class="note">${RUN.note}</div>` : ''}
+  <div class="row2"><button class="btn" data-act="rgo">${lbl}</button>${RUN.st === 'pause' ? '<button class="btn ghost" data-act="rfin">Finish and submit</button>' : ''}</div>
+  ${RUN.st === 'pause' ? '<button class="link small" style="margin-top:12px" data-act="rdisc">Discard this run</button>' : ''}
+  ${RUN.st !== 'idle' ? '<p class="small muted" style="margin-top:10px">Keep this screen open while you run. Tracking can pause if the phone locks.</p>' : ''}
+  <h2>No GPS? Submit manually</h2>
+  <div class="g3"><div><label class="lbl" for="mr-km">Distance (km)</label><input id="mr-km" type="number" inputmode="decimal" step="0.01"></div><div><label class="lbl" for="mr-m">Min</label><input id="mr-m" type="number" inputmode="numeric"></div><div><label class="lbl" for="mr-s">Sec</label><input id="mr-s" type="number" inputmode="numeric"></div></div>
+  <div class="err" id="merr" role="alert"></div><button class="btn ghost" style="margin-top:12px" data-act="rman">Submit run</button>
+  <h2>Your runs</h2>${runs().length ? runs().map((r, i) => `<div class="run"><div class="rth">${mapSvg(r.route || [], 1)}</div><div style="flex:1"><b>${r.km.toFixed(2)} km in ${hms(r.s)}</b><span class="small muted">${pc(r.km, r.s)}/km, ${new Date(r.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, ${r.src === 'gps' ? 'GPS' : 'manual'}</span></div><button class="link small" data-act="rdel" data-i="${i}" aria-label="Delete run">Delete</button></div>`).join('') : '<p class="muted small">No runs yet. Your submissions appear here.</p>'}`;
+}
+
+/* ---------- timers and theme ---------- */
+const TM = { mode: 'sw', acc: 0, t0: 0, on: false, end: 0, fin: 0 };
+const swNow = () => TM.acc + (TM.on ? Date.now() - TM.t0 : 0);
+const tmText = () => TM.mode === 'sw' ? (s => Math.floor(s / 60) + ':' + (s % 60).toFixed(1).padStart(4, '0'))(swNow() / 1000) : TM.fin ? 'Go' : fmt(TM.end ? Math.max(0, Math.ceil((TM.end - Date.now()) / 1000)) : 0);
+function tmShow(open) {
+  const sh = $('#sheet'); sh.hidden = !open; if (!open) return;
+  sh.innerHTML = `<div class="card" role="dialog" aria-label="Timers">${seg('tmmode', TM.mode, [['sw', 'Stopwatch'], ['rest', 'Rest timer']])}<div class="clock" id="tmv">${tmText()}</div>
+  ${TM.mode === 'sw' ? `<div class="row2"><button class="btn" data-act="swgo">${TM.on ? 'Stop' : 'Start'}</button><button class="btn ghost" data-act="swreset">Reset</button></div><div class="row2"><button class="btn ghost" data-act="swuse">Use as run time</button></div>`
+  : `<div class="chips">${[30, 60, 90, 120].map(s => `<button class="btn" data-act="rest" data-v="${s}">${s}s</button>`).join('')}</div><p class="small muted" style="text-align:center;margin-top:10px">Vibrates when rest is over, if your phone allows it.</p>`}
+  <button class="btn ghost" style="margin-top:12px" data-act="tmx">Close</button></div>`;
+}
+setInterval(() => { const e = $('#tmv'); if (!e) return; if (TM.mode === 'rest' && TM.end && Date.now() >= TM.end) { TM.end = 0; TM.fin = 1; if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } e.textContent = tmText(); }, 100);
+(() => {
+  const root = document.documentElement, ap = v => { if (v) root.dataset.theme = v; else delete root.dataset.theme; };
+  try { ap(localStorage.getItem('vardi:theme')); } catch (e) { /* default theme */ }
+  $('#theme').addEventListener('click', () => { const c = root.dataset.theme, dark = c ? c === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches, nx = dark ? 'light' : 'dark'; ap(nx); try { localStorage.setItem('vardi:theme', nx); } catch (e) { /* ignore */ } });
+})();
+
+/* ---------- boot ---------- */
+(async () => {
+  const saved = await load();
+  if (saved && saved.screen && saved.examId) {
+    S = Object.assign(S, saved);
+    if (S.screen === 'app') { S.wk = clamp(S.wk || currentWeek(), 1, S.P.weeks); }
+  }
+  render();
+})();
+})();
+</script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
+</body>
+</html>
